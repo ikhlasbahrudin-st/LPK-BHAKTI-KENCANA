@@ -60,7 +60,7 @@ $pendaftaran = [
     'gelombang'         => 'Gelombang Reguler',
     'program'           => 'Caregiver Lansia,',
     'lokasi'            => 'Cianjur, Jawa Barat',
-    'telepon_panitia' => '081234567890',
+    'telepon_panitia' => '081220192571',
     'status'            => 'Aktif'
 ];
 
@@ -97,7 +97,7 @@ if (isset($conn) && !$conn->connect_error) {
 $gelombang       = isset($pendaftaran['gelombang']) ? $pendaftaran['gelombang'] : 'Gelombang Reguler';
 $status_db       = isset($pendaftaran['status']) ? $pendaftaran['status'] : 'Aktif';
 $is_aktif        = (strtolower($status_db) === 'aktif');
-$telepon_panitia = isset($pendaftaran['telepon_panitia']) ? $pendaftaran['telepon_panitia'] : '081234567890';
+$telepon_panitia = isset($pendaftaran['telepon_panitia']) ? $pendaftaran['telepon_panitia'] : '081220192571';
 $formatted_phone = preg_replace('/^0/', '62', $telepon_panitia);
 $lokasi          = isset($pendaftaran['lokasi']) ? $pendaftaran['lokasi'] : 'Cianjur, Jawa Barat';
 $program         = isset($pendaftaran['program']) ? $pendaftaran['program'] : 'Caregiver Lansia & Early Childhood Care';
@@ -946,69 +946,121 @@ function triggerDownload(buttonElement, fileUrl) {
         </div>
     </section>
 
-    <!-- ================= SECTION TESTIMONI ================= -->
-    <section id="testimoni" class="py-20 bg-slate-50 overflow-hidden" data-aos="fade-up" data-aos-duration="1000">
-        <div class="text-center max-w-2xl mx-auto mb-14 px-4" data-aos="fade-down" data-aos-duration="800">
-            <span class="text-indigo-600 font-semibold text-xs uppercase tracking-wider bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-100/50">Testimoni & Ulasan</span>
-            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-3 mb-4">Apa Kata Keluarga di Cianjur Tentang Kami?</h2>
-            <p class="text-slate-600 text-sm sm:text-base">Kepuasan dan kenyamanan Anda adalah prioritas utama pelayanan LPK Bhakti Kencana.</p>
+<!-- ================= SECTION TESTIMONI ================= -->
+<section id="testimoni" class="py-20 bg-slate-50 overflow-hidden" data-aos="fade-up" data-aos-duration="1000">
+    <div class="text-center max-w-2xl mx-auto mb-14 px-4" data-aos="fade-down" data-aos-duration="800">
+        <span class="text-indigo-600 font-semibold text-xs uppercase tracking-wider bg-indigo-50 px-3.5 py-1.5 rounded-full border border-indigo-100/50">Testimoni & Ulasan</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-3 mb-4">Apa Kata Keluarga di Cianjur Tentang Kami?</h2>
+        <p class="text-slate-600 text-sm sm:text-base mb-6">Kepuasan dan kenyamanan Anda adalah prioritas utama pelayanan LPK Bhakti Kencana.</p>
+        
+        <!-- Tombol untuk memunculkan Popup Form Testimoni Warga -->
+        <button onclick="openPublicTestiModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold px-6 py-3 rounded-xl shadow-md transition inline-flex items-center gap-2 cursor-pointer">
+            <span>✍️ Tulis Testimoni Anda</span>
+        </button>
+    </div>
+
+    <div class="relative w-full overflow-hidden">
+        <div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
+
+        <div id="testimonial-track" class="flex space-x-6 py-4 px-4 w-max hover:[animation-play-state:paused]" style="animation: scrollMarquee 40s linear infinite;">
+            <?php
+            // Ambil data testimoni yang aktif dari database
+            $query_testi = "SELECT * FROM testimoni WHERE status = 'Aktif' ORDER BY id DESC";
+            $result_public_testi = $conn->query($query_testi);
+
+            if ($result_public_testi && $result_public_testi->num_rows > 0):
+                while ($t = $result_public_testi->fetch_assoc()):
+                    // Cek foto (jika upload lokal ada di assets/uploads/, jika kosong pakai Unsplash default)
+                    $foto_path = !empty($t['foto']) ? 'assets/uploads/' . $t['foto'] : 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=faces';
+            ?>
+                <!-- Item Testimoni Dinamis -->
+                <div class="w-[320px] sm:w-[360px] bg-white p-7 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
+                    <div>
+                        <div class="flex text-amber-400 text-sm mb-3 space-x-0.5">
+                            <?php for($i=0; $i < $t['rating']; $i++): ?><span>★</span><?php endfor; ?>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed italic mb-6">"<?= htmlspecialchars($t['pesan']); ?>"</p>
+                    </div>
+                    <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
+                        <img src="<?= htmlspecialchars($foto_path); ?>" alt="<?= htmlspecialchars($t['nama']); ?>" class="w-11 h-11 rounded-full object-cover border-2 border-indigo-100">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm"><?= htmlspecialchars($t['nama']); ?></h4>
+                            <span class="text-xs text-slate-500"><?= htmlspecialchars($t['pekerjaan_lokasi']); ?></span>
+                        </div>
+                    </div>
+                </div>
+            <?php 
+                endwhile; 
+            else:
+            ?>
+                <p class="text-center text-slate-400 py-4">Belum ada ulasan testimoni yang tersedia.</p>
+            <?php endif; ?>
         </div>
+    </div>
+</section>
 
-        <div class="relative w-full overflow-hidden">
-            <div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none"></div>
-            <div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-slate-50 to-transparent z-10 pointer-events-none"></div>
+<!-- ================= MODAL POPUP FORM TESTIMONI WARGA ================= -->
+<div id="publicTestiModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+        <div class="bg-indigo-600 px-6 py-4 flex justify-between items-center text-white">
+            <h3 class="font-bold text-lg">Kirim Ulasan / Testimoni Anda</h3>
+            <button onclick="closePublicTestiModal()" class="text-white text-xl font-bold cursor-pointer">&times;</button>
+        </div>
+        
+        <!-- Form mengirim testimoni publik (bisa diarahkan ke file proses khusus atau langsung ke logika backend) -->
+        <form action="proses_testimoni.php" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap *</label>
+                <input type="text" name="nama" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: Ibu Siti Nurhaliza">
+            </div>
 
-            <div id="testimonial-track" class="flex space-x-6 py-4 px-4 w-max hover:[animation-play-state:paused]" style="animation: scrollMarquee 40s linear infinite;">
-                <!-- Testimoni 1 -->
-                <div class="w-[320px] sm:w-[360px] bg-white p-7 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
-                    <div>
-                        <div class="flex text-amber-400 text-sm mb-3 space-x-0.5"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-                        <p class="text-slate-600 text-sm leading-relaxed italic mb-6">"Sangat terbantu sekali dengan layanan Babysitter dari LPK Bhakti Kencana. Pengasuhnya telaten, sabar, dan sangat teliti menjaga anak."</p>
-                    </div>
-                    <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=faces" alt="Ibu Siti" class="w-11 h-11 rounded-full object-cover border-2 border-indigo-100">
-                        <div><h4 class="font-bold text-slate-900 text-sm">Ibu Siti Nurhaliza</h4><span class="text-xs text-slate-500">Warga Bojong, Cianjur</span></div>
-                    </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Pekerjaan / Wilayah Domisili *</label>
+                <input type="text" name="pekerjaan_lokasi" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Contoh: Warga Karangtengah, Cianjur">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Rating Kepuasan *</label>
+                    <select name="rating" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="5">★★★★★ (5 Bintang - Sangat Baik)</option>
+                        <option value="4">★★★★☆ (4 Bintang - Baik)</option>
+                        <option value="3">★★★☆☆ (3 Bintang - Cukup)</option>
+                    </select>
                 </div>
-
-                <!-- Testimoni 2 -->
-                <div class="w-[320px] sm:w-[360px] bg-white p-7 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
-                    <div>
-                        <div class="flex text-amber-400 text-sm mb-3 space-x-0.5"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-                        <p class="text-slate-600 text-sm leading-relaxed italic mb-6">"Mencari Caregiver untuk lansia butuh kepercayaan tinggi, dan LPK ini membuktikannya. Perawatnya sangat ramah dan paham medis dasar."</p>
-                    </div>
-                    <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=faces" alt="Bapak Rian" class="w-11 h-11 rounded-full object-cover border-2 border-indigo-100">
-                        <div><h4 class="font-bold text-slate-900 text-sm">Bapak Rian Hidayat</h4><span class="text-xs text-slate-500">Karangtengah, Cianjur</span></div>
-                    </div>
-                </div>
-
-                <!-- Testimoni 3 -->
-                <div class="w-[320px] sm:w-[360px] bg-white p-7 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
-                    <div>
-                        <div class="flex text-amber-400 text-sm mb-3 space-x-0.5"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-                        <p class="text-slate-600 text-sm leading-relaxed italic mb-6">"Fasilitas Daycare-nya bersih dan aman. Komunikasi dengan admin juga cepat, ditambah asisten AI CIKA sangat membantu info awal."</p>
-                    </div>
-                    <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=faces" alt="Ibu Dewi" class="w-11 h-11 rounded-full object-cover border-2 border-indigo-100">
-                        <div><h4 class="font-bold text-slate-900 text-sm">Ibu Dewi Lestari</h4><span class="text-xs text-slate-500">Rawa Bango, Cianjur</span></div>
-                    </div>
-                </div>
-
-                <!-- Testimoni 4 -->
-                <div class="w-[320px] sm:w-[360px] bg-white p-7 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between flex-shrink-0">
-                    <div>
-                        <div class="flex text-amber-400 text-sm mb-3 space-x-0.5"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-                        <p class="text-slate-600 text-sm leading-relaxed italic mb-6">"Alhamdulillah proses pendaftaran cepat dan transparan. Pelatihan tenaga kerjanya benar-benar teruji profesional."</p>
-                    </div>
-                    <div class="flex items-center space-x-3 pt-4 border-t border-slate-100">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces" alt="Bapak Hendra" class="w-11 h-11 rounded-full object-cover border-2 border-indigo-100">
-                        <div><h4 class="font-bold text-slate-900 text-sm">Bapak Hendra Gunawan</h4><span class="text-xs text-slate-500">Cianjur Kota</span></div>
-                    </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Foto Profil / Wajah (Opsional)</label>
+                    <input type="file" name="foto" accept="image/*" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs">
                 </div>
             </div>
-        </div>
-    </section>
+
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Pesan / Kesannya *</label>
+                <textarea name="pesan" rows="3" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Ceritakan pengalaman Anda menggunakan layanan LPK Bhakti Kencana..."></textarea>
+            </div>
+
+            <button type="submit" name="kirim_testimoni" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl transition text-sm cursor-pointer shadow-sm">Kirim Ulasan Sekarang</button>
+        </form>
+    </div>
+</div>
+
+<!-- SCRIPT PENDUKUNG MODAL TESTIMONI -->
+<script>
+    const publicModal = document.getElementById('publicTestiModal');
+
+    function openPublicTestiModal() {
+        if(publicModal) {
+            publicModal.classList.remove('hidden');
+        }
+    }
+
+    function closePublicTestiModal() {
+        if(publicModal) {
+            publicModal.classList.add('hidden');
+        }
+    }
+</script>
 
     <style>
         @keyframes scrollMarquee {

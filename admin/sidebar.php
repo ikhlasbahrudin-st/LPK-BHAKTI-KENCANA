@@ -10,7 +10,6 @@ $admin_role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'admin'
 <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-slate-300 border-r border-slate-800 flex flex-col justify-between shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl">
     <div>
         <!-- Header Sidebar -->
-<!-- Header Sidebar -->
         <div class="h-20 flex items-center justify-between px-6 border-b border-slate-800 bg-slate-950/50">
             <!-- Bagian Kiri: Logo & Info Admin -->
             <div class="flex items-center space-x-3">
@@ -22,14 +21,12 @@ $admin_role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'admin'
                     </span>
                 </div>
             </div>
-
-
         </div>
 
         <!-- Navigasi Menu Berdasarkan Hak Akses Role -->
         <nav class="p-4 space-y-1.5 overflow-y-auto max-h-[calc(100vh-160px)]">
             
-            <!-- Dashboard Utama: Diakses oleh super_admin (bisa ditambahkan jika koordinator/admin juga butuh melihat dashboard ringkasan) -->
+            <!-- Dashboard Utama -->
             <?php if (in_array($admin_role, ['super_admin', 'koordinator', 'admin'])): ?>
                 <a href="index.php" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition <?php echo ($current_page == 'index.php') ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                     <span>📊</span><span>Dashboard</span>
@@ -38,20 +35,18 @@ $admin_role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'admin'
 
             <!-- MENU LAYANAN & OPERASIONAL -->
             <?php 
-            // Tentukan halaman layanan apa saja yang boleh diakses berdasarkan role
             $allowed_operasional_pages = [];
             if ($admin_role === 'super_admin') {
                 $allowed_operasional_pages = ['pekerja.php', 'pelanggan.php', 'booking.php'];
             } elseif ($admin_role === 'koordinator') {
-                $allowed_operasional_pages = ['pekerja.php']; // Koordinator hanya Kelola Pekerja dalam menu Layanan
+                $allowed_operasional_pages = ['pekerja.php'];
             } elseif ($admin_role === 'admin') {
-                $allowed_operasional_pages = ['pelanggan.php', 'booking.php']; // Admin akses Kelola Pelanggan & Kelola Booking
+                $allowed_operasional_pages = ['pelanggan.php', 'booking.php'];
             }
 
             $is_operasional_page = in_array($current_page, $allowed_operasional_pages); 
-            
-            // Cek apakah role berhak melihat menu dropdown Layanan ini
             $can_see_layanan = in_array($admin_role, ['super_admin']) || ($admin_role === 'koordinator') || ($admin_role === 'admin');
+            
             if ($can_see_layanan):
             ?>
             <div>
@@ -87,7 +82,7 @@ $admin_role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'admin'
             </div>
             <?php endif; ?>
 
-            <!-- Menu Data Pendaftaran (Opsional untuk Super Admin / Koordinator pendukung) -->
+            <!-- Menu Data Pendaftaran -->
             <?php if (in_array($admin_role, ['super_admin', 'koordinator'])): ?>
                 <a href="pendaftaran.php" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition <?php echo ($current_page == 'pendaftaran.php') ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                     <span>📋</span><span>Data Pendaftaran</span>
@@ -98,6 +93,13 @@ $admin_role = isset($_SESSION['admin_role']) ? $_SESSION['admin_role'] : 'admin'
             <?php if (in_array($admin_role, ['super_admin', 'koordinator'])): ?>
                 <a href="laporan_harian.php" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition <?php echo ($current_page == 'laporan_harian.php') ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
                     <span>📈</span><span>Kelola Laporan Harian</span>
+                </a>
+            <?php endif; ?>
+
+            <!-- KELOLA TESTIMONI: Hanya Super Admin & Koordinator -->
+            <?php if (in_array($admin_role, ['super_admin', 'koordinator'])): ?>
+                <a href="testimoni.php" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition <?php echo ($current_page == 'testimoni.php') ? 'bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-600/20' : 'text-slate-400 hover:bg-slate-800 hover:text-white'; ?>">
+                    <span>💬</span><span>Kelola Testimoni</span>
                 </a>
             <?php endif; ?>
 
