@@ -204,9 +204,10 @@ $result_transaksi = $conn->query("SELECT t.*, p.nama_pelanggan, p.layanan_dipili
             </div>
             <div class="flex flex-wrap items-center gap-3">
                 <!-- Tombol Cetak / Download PDF -->
-                <button onclick="cetakPDF()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-3 rounded-xl text-sm shadow-md transition inline-flex items-center gap-2 cursor-pointer">
+                <!-- Tombol Cetak / Download PDF yang mengarah ke halaman rekap_keuangan.php -->
+                <a href="rekap_keuangan.php" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-3 rounded-xl text-sm shadow-md transition inline-flex items-center gap-2">
                     <span>🖨️ Cetak / Unduh PDF</span>
-                </button>
+                </a>
                 <button onclick="openModal('tambah')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-5 py-3 rounded-xl text-sm shadow-md transition inline-flex items-center gap-2 cursor-pointer">
                     <span>➕ Tambah Transaksi</span>
                 </button>

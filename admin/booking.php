@@ -792,12 +792,7 @@ $result_pekerja = $conn->query("SELECT id, nama_lengkap, spesialisasi, status_pe
         });
     </script>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 w-full mt-auto">
-        &copy; 2026 LPK Bhakti Kencana Cianjur. All rights reserved.
-    </footer>
 </div>
 
-<?php
-require_once 'footer.php';
-?>
+</body>
+</html>

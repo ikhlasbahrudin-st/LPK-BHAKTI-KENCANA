@@ -364,7 +364,7 @@ $result_pelanggan = $conn->query("SELECT * FROM pelanggan ORDER BY id DESC");
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Telepon / WhatsApp *</label>
-                    <input type="tel" name="telepon" id="telepon" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm" placeholder="Contoh: 081234567890">
+                    <input type="tel" name="telepon" id="telepon" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm" placeholder="Contoh: 081220192571">
                 </div>
             </div>
 

@@ -20,7 +20,7 @@ if ($admin_role !== 'super_admin') {
     exit;
 }
 
-// 3. Panggil file konfigurasi koneksi database
+// 4. Panggil file konfigurasi koneksi database
 require_once '../config.php';
 
 // ==========================================
@@ -206,9 +206,10 @@ require_once 'header.php';
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Status Gelombang *</label>
+                            <!-- Disesuaikan dengan ENUM('Aktif', 'Tidak Aktif') -->
                             <select name="status" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-semibold text-indigo-600">
                                 <option value="Aktif" <?php echo ($edit_data && $edit_data['status'] == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
-                                <option value="Tutup" <?php echo ($edit_data && $edit_data['status'] == 'Tutup') ? 'selected' : ''; ?>>Tutup</option>
+                                <option value="Tidak Aktif" <?php echo ($edit_data && $edit_data['status'] == 'Tidak Aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
                             </select>
                         </div>
                     </div>
@@ -220,7 +221,7 @@ require_once 'header.php';
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 mb-1">Nomor Telepon Panitia / Admin *</label>
-                            <input type="text" name="telepon_panitia" value="<?php echo $edit_data ? htmlspecialchars($edit_data['telepon_panitia']) : ''; ?>" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm" placeholder="Contoh: 081234567890">
+                            <input type="text" name="telepon_panitia" value="<?php echo $edit_data ? htmlspecialchars($edit_data['telepon_panitia']) : ''; ?>" required class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm" placeholder="Contoh: 081220192571">
                         </div>
                     </div>
 
@@ -283,8 +284,9 @@ require_once 'header.php';
                                                     Aktif
                                                 </span>
                                             <?php else: ?>
+                                                <!-- Disesuaikan dengan ENUM('Aktif', 'Tidak Aktif') -->
                                                 <span class="bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold px-2.5 py-1 rounded-full">
-                                                    Tutup
+                                                    Tidak Aktif
                                                 </span>
                                             <?php endif; ?>
                                         </td>
@@ -313,11 +315,6 @@ require_once 'header.php';
 
         </main>
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 w-full mt-auto">
-        &copy; 2026 LPK Bhakti Kencana Cianjur. All rights reserved.
-    </footer>
 
 </div>
 

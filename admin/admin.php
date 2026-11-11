@@ -474,9 +474,6 @@ $result_admins = $conn->query("SELECT * FROM admins ORDER BY id DESC");
         }
     </script>
 
-    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 w-full mt-auto">
-        &copy; 2026 LPK Bhakti Kencana Cianjur. All rights reserved.
-    </footer>
 </div>
 
 <?php require_once 'footer.php'; ?>

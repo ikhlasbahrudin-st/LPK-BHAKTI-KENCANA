@@ -101,6 +101,15 @@ $telepon_panitia = isset($pendaftaran['telepon_panitia']) ? $pendaftaran['telepo
 $formatted_phone = preg_replace('/^0/', '62', $telepon_panitia);
 $lokasi          = isset($pendaftaran['lokasi']) ? $pendaftaran['lokasi'] : 'Cianjur, Jawa Barat';
 $program         = isset($pendaftaran['program']) ? $pendaftaran['program'] : 'Caregiver Lansia & Early Childhood Care';
+// Pastikan variabel status dari database sudah diambil, misalnya:
+// $status_db = $row['status']; (atau variabel yang menyimpan data status dari database Anda)
+
+// 1. Tentukan apakah statusnya Aktif atau Tidak Aktif
+$is_aktif = (isset($status_db) && $status_db == 'Aktif');
+
+// 2. Definisikan variabel $status_teks agar tidak muncul warning undefined variable
+// Jika Aktif -> "Dibuka", Jika Tidak Aktif -> "Ditutup"
+$status_teks = $is_aktif ? 'Dibuka' : 'Ditutup';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -711,39 +720,40 @@ $program         = isset($pendaftaran['program']) ? $pendaftaran['program'] : 'C
                     </div>
                 </div>
 
-                <!-- Sisi Kanan (Informasi Gelombang Aktif dari Database) -->
-                <div data-aos="fade-left" data-aos-duration="1000" class="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden bg-cover bg-center" style="background-image: url('assets/img/daftar.jpg');">
-                    <div class="absolute inset-0 bg-indigo-950/80 backdrop-blur-[2px]"></div>
+<!-- Sisi Kanan (Informasi Gelombang Aktif dari Database) -->
+<div data-aos="fade-left" data-aos-duration="1000" class="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden bg-cover bg-center" style="background-image: url('assets/img/daftar.jpg');">
+    <div class="absolute inset-0 bg-indigo-950/80 backdrop-blur-[2px]"></div>
 
-                    <div class="relative z-10">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-2xl font-bold">Status Pendaftaran</h3>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide <?php echo $is_aktif ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'; ?>">
-                                <?php echo htmlspecialchars($status_db); ?>
-                            </span>
-                        </div>
+    <div class="relative z-10">
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-2xl font-bold">Status Pendaftaran</h3>
+            <!-- Badge berubah warna dan tulisannya otomatis -->
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide <?php echo $is_aktif ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'; ?>">
+                <?php echo htmlspecialchars($status_teks); ?>
+            </span>
+        </div>
 
-                        <div class="text-indigo-300 font-semibold text-sm mb-4">
-                            📢 <?php echo htmlspecialchars($gelombang); ?>
-                        </div>
+        <div class="text-indigo-300 font-semibold text-sm mb-4">
+            📢 <?php echo htmlspecialchars($gelombang); ?>
+        </div>
 
-                        <p class="text-indigo-200 text-sm mb-6">
-                            <?php echo $is_aktif ? 'Amankan kursi pelatihan Anda sekarang di LPK Bhakti Kencana Cianjur. Kuota kelas terbatas setiap sesinya.' : 'Mohon maaf, gelombang pendaftaran saat ini sedang ditutup. Silakan pantau informasi berkala.'; ?>
-                        </p>
+        <p class="text-indigo-200 text-sm mb-6">
+            <?php echo $is_aktif ? 'Amankan kursi pelatihan Anda sekarang di LPK Bhakti Kencana Cianjur. Kuota kelas terbatas setiap sesinya.' : 'Mohon maaf, gelombang pendaftaran saat ini sedang ditutup. Silakan pantau informasi berkala.'; ?>
+        </p>
 
-                        <ul class="space-y-3 text-sm text-indigo-100 mb-8">
-                            <li>📍 <strong>Lokasi:</strong> <?php echo htmlspecialchars($lokasi); ?></li>
-                            <li>🎓 <strong>Program:</strong> <?php echo htmlspecialchars($program); ?></li>
-                            <li>📞 <strong>Hotline Panitia:</strong> <?php echo htmlspecialchars($telepon_panitia); ?></li>
-                        </ul>
+        <ul class="space-y-3 text-sm text-indigo-100 mb-8">
+            <li>📍 <strong>Lokasi:</strong> <?php echo htmlspecialchars($lokasi); ?></li>
+            <li>🎓 <strong>Program:</strong> <?php echo htmlspecialchars($program); ?></li>
+            <li>📞 <strong>Hotline Panitia:</strong> <?php echo htmlspecialchars($telepon_panitia); ?></li>
+        </ul>
 
-                        <?php if ($is_aktif): ?>
-                            <a href="https://wa.me/<?php echo $formatted_phone; ?>?text=Halo,%20saya%20ingin%20tanya%20jadwal%20pendaftaran%20<?php echo urlencode($gelombang); ?>%20LPK%20Bhakti%20Kencana%20Cianjur" target="_blank" class="block text-center bg-white text-indigo-900 hover:bg-indigo-50 font-bold py-3 rounded-xl transition shadow-sm">Hubungi Panitia Pendaftaran</a>
-                        <?php else: ?>
-                            <div class="block text-center bg-slate-800 text-slate-400 font-medium py-3 rounded-xl text-sm">Pendaftaran Tidak Aktif</div>
-                        <?php endif; ?>
-                    </div>
-                </div>
+        <?php if ($is_aktif): ?>
+            <a href="https://wa.me/<?php echo $formatted_phone; ?>?text=Halo,%20saya%20ingin%20tanya%20jadwal%20pendaftaran%20<?php echo urlencode($gelombang); ?>%20LPK%20Bhakti%20Kencana%20Cianjur" target="_blank" class="block text-center bg-white text-indigo-900 hover:bg-indigo-50 font-bold py-3 rounded-xl transition shadow-sm">Hubungi Panitia Pendaftaran</a>
+        <?php else: ?>
+            <div class="block text-center bg-slate-800 text-slate-400 font-medium py-3 rounded-xl text-sm">Pendaftaran Ditutup</div>
+        <?php endif; ?>
+    </div>
+</div>
 
             </div>
         </div>
